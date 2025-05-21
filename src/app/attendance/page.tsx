@@ -1,12 +1,13 @@
 "use client";
-import { useState } from "react";
+
 import { Topbar } from "@/components/Topbar";
 import { Search } from "lucide-react";
 import { AddEmployeeButton } from "@/components/AddEmployeeButton";
 import { Input } from "@/components/ui/input";
+import EmployeeAttendanceTable from "@/components/EmployeeAttendanceTable";
+
 
 const Page = () => {
-
   return (
     <div className="min-h-screen bg-white p-4 space-y-6">
       <Topbar />
@@ -31,9 +32,13 @@ const Page = () => {
             />
           </div>
 
-          <AddEmployeeButton  />
+          <AddEmployeeButton />
         </div>
       </div>
+
+      <main className="p-10">
+        <EmployeeAttendanceTable />
+      </main>
     </div>
   );
 };
