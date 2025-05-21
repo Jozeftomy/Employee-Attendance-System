@@ -1,12 +1,12 @@
 "use client";
+import { useState } from "react";
 import { Topbar } from "@/components/Topbar";
-import { Search, UserPlus } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Search } from "lucide-react";
+import { AddEmployeeButton } from "@/components/AddEmployeeButton";
 import { Input } from "@/components/ui/input";
 
-
-
 const Page = () => {
+
   return (
     <div className="min-h-screen bg-white p-4 space-y-6">
       <Topbar />
@@ -31,10 +31,7 @@ const Page = () => {
             />
           </div>
 
-          <Button className="flex items-center justify-center gap-2 rounded-md bg-[#465DFE] text-white px-4 py-3 text-sm font-bold">
-            <UserPlus size={18} />
-            Add Employee
-          </Button>
+          <AddEmployeeButton  />
         </div>
       </div>
     </div>

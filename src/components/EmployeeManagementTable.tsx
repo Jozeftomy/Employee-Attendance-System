@@ -1,10 +1,10 @@
 "use client";
-import { EditEmployeeDialog } from "@/components/EditEmployeeDialog";
+import { EditEmployeeDialog} from "@/components/EditEmployeeDialog ";
 import { useState } from "react";
 import { Eye, Pencil, Trash2, Search, UserPlus } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { AddEmployeeButton } from "./AddEmployeeButton";
 
 type Employee = {
   id: string;
@@ -54,10 +54,7 @@ export function EmployeeManagementTable() {
             />
           </div>
 
-          <Button className="flex items-center justify-center gap-2 rounded-md bg-[#465DFE] text-white px-4 py-3 text-sm font-bold">
-            <UserPlus size={18} />
-            Add Employee
-          </Button>
+          <AddEmployeeButton/>
         </div>
       </div>
       <div className="w-full overflow-x-auto bg-white rounded-xl p-2 sm:p-4">

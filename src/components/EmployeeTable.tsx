@@ -1,8 +1,7 @@
 "use client";
-
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { Search, UserPlus } from "lucide-react";
+import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -12,6 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { AddEmployeeButton } from "./AddEmployeeButton";
 
 const employees = [
   { id: "Emp 01", name: "Kiran", dept: "IT", status: "Absent", checkIn: "-", checkOut: "-", action: "Absent" },
@@ -41,18 +41,20 @@ export function EmployeeTable() {
   return (
     <div className="relative w-full p-4 sm:p-6 md:p-8 bg-white rounded-2xl shadow">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <p className="text-xl md:text-2xl font-semibold text-[#1E1E1E]">Employee Attendance Table</p>
+        <p className="text-xl md:text-2xl font-semibold text-[#1E1E1E]">
+          Employee Attendance Table
+        </p>
 
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full md:w-auto">
+          {/* Search Input */}
           <div className="relative w-full sm:w-[260px]">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
-            <Input className="w-full pl-10 bg-transparent border border-gray-300 rounded-md" placeholder="Search" />
+            <Input
+              className="w-full pl-10 bg-transparent border border-gray-300 rounded-md"
+              placeholder="Search"
+            />
           </div>
-
-          <Button className="flex items-center justify-center gap-2 rounded-md bg-[#465DFE] text-white px-4 py-3 text-sm font-bold">
-            <UserPlus size={18} />
-            Add Employee
-          </Button>
+          <AddEmployeeButton/>
         </div>
       </div>
       <div className="mt-6 overflow-x-auto">
