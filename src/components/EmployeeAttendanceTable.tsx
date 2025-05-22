@@ -58,8 +58,6 @@ export default function EmployeeAttendanceTable() {
           ))}
         </TableBody>
       </Table>
-
-      {/* Pagination */}
       <div className="flex justify-center mt-6 space-x-3">
         <button className="px-4 py-2 border rounded-md text-gray-700 hover:bg-gray-100">Previous</button>
         <button className="px-4 py-2 border rounded-md text-gray-700 hover:bg-gray-100">1</button>
