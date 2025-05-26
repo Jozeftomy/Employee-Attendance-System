@@ -1,5 +1,5 @@
 "use client"
-
+import { BaseUrl } from "@/app/services/api"
 import { useRouter } from 'next/navigation'
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -30,10 +30,30 @@ export default function Home() {
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      const res = await fetch(`${BaseUrl}/admin/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      })
 
-    router.push('/dashboard')
+      if (!res.ok) {
+        const errorData = await res.json()
+        throw new Error(errorData.message || 'Login failed')
+      }
+
+      const data = await res.json()
+      console.log('Login successful:', data)
+
+
+      router.push('/dashboard')
+    } catch (error: any) {
+      console.error('Login error:', error)
+      alert(error.message)
+    }
   }
 
   return (

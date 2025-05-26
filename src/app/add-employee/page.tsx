@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import DEVURL from '@/app/services/api'
+import { BaseUrl } from '../services/api'
 
 export default function AddEmployee() {
   const [formData, setFormData] = useState({
@@ -38,11 +38,19 @@ export default function AddEmployee() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
+    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL
+
     try {
-      const response = await fetch(`http://localhost:4000/api/employee/add-employee`, {
+      const formPayload = new FormData()
+      Object.entries(formData).forEach(([key, value]) => {
+        if (value !== null) {
+          formPayload.append(key, value as string | Blob)
+        }
+      })
+
+      const response = await fetch(`${BaseUrl}/employee/add-employee`, {
         method: 'POST',
-        
-        body: JSON.stringify(formData),
+        body: formPayload
       })
 
       const text = await response.text()
@@ -125,6 +133,18 @@ export default function AddEmployee() {
         <div>
           <label className="block mb-1">Address</label>
           <textarea name="address" placeholder="Enter your Address" onChange={handleChange} className="w-full p-2 border border-gray-400 rounded" />
+        </div>
+        <div>
+          <label className="block mb-1">Password</label>
+          <input name="password" type="password" placeholder="Enter Password" onChange={handleChange} className="w-full p-2 border border-gray-400 rounded" />
+        </div>
+        <div>
+          <label className="block mb-1">Confirm Password</label>
+          <input name="confirmPassword" type="password" placeholder="Confirm Password" onChange={handleChange} className="w-full p-2 border border-gray-400 rounded" />
+        </div>
+        <div>
+          <label className="block mb-1">Upload Photo</label>
+          <input name="photo" type="file" accept="image/*" onChange={handleChange} className="w-full p-2 border border-gray-400 rounded bg-white" />
         </div>
         <div className="md:col-span-2 flex justify-center">
           <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700">Submit</button>

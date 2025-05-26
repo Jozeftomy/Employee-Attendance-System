@@ -1,10 +1,16 @@
 "use client";
-import { EditEmployeeDialog} from "@/components/EditEmployeeDialog ";
-import { useState } from "react";
+import { EditEmployeeDialog } from "@/components/EditEmployeeDialog ";
+import { useState, useEffect } from "react";
 import { Eye, Pencil, Trash2, Search, UserPlus } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { AddEmployeeButton } from "./AddEmployeeButton";
+import { BaseUrl } from "@/app/services/api";
 
 type Employee = {
   id: string;
@@ -14,18 +20,8 @@ type Employee = {
   mobile: string;
 };
 
-const initialEmployees: Employee[] = [
-  { id: "Emp 01", name: "Kiran", dept: "IT", email: "kiran@gmail.com", mobile: "9876543210" },
-  { id: "Emp 02", name: "Surya", dept: "HR", email: "surya123@gmail.com", mobile: "9876543210" },
-  { id: "Emp 03", name: "Karthi", dept: "Marketing", email: "karthi@gmail.com", mobile: "9876543210" },
-  { id: "Emp 04", name: "Kajal", dept: "HR", email: "kajal@gmail.com", mobile: "9876543210" },
-  { id: "Emp 05", name: "Kajal", dept: "HR", email: "kajal@gmail.com", mobile: "9876543210" },
-  { id: "Emp 06", name: "Kajal", dept: "HR", email: "kajal@gmail.com", mobile: "9876543210" },
-  { id: "Emp 07", name: "Kajal", dept: "HR", email: "kajal@gmail.com", mobile: "9876543210" },
-];
-
 export function EmployeeManagementTable() {
-  const [employees, setEmployees] = useState<Employee[]>(initialEmployees);
+  const [employees, setEmployees] = useState<Employee[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [viewEmployee, setViewEmployee] = useState<Employee | null>(null);
   const [editEmployee, setEditEmployee] = useState<Employee | null>(null);
@@ -36,14 +32,44 @@ export function EmployeeManagementTable() {
   const currentRows = employees.slice(indexOfFirst, indexOfLast);
   const totalPages = Math.ceil(employees.length / rowsPerPage);
 
-  const handleDelete = (id: string) => {
-    setEmployees((prev) => prev.filter((emp) => emp.id !== id));
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const res = await fetch(`${BaseUrl}/employee/all`);
+        const data = await res.json();
+        setEmployees(data); 
+      } catch (error) {
+        console.error("Failed to fetch employees", error);
+      }
+    };
+
+    fetchEmployees();
+  }, []);
+
+  const handleDelete = async (id: string) => {
+    try {
+      const res = await fetch(`${BaseUrl}/employee/delete-employee`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to delete employee");
+      }
+
+      setEmployees((prev) => prev.filter((emp) => emp.id !== id));
+    } catch (error) {
+      console.error("Error deleting employee:", error);
+    }
   };
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row flex-wrap justify-between items-start md:items-center gap-4">
-        <p className="text-xl md:text-2xl font-semibold text-[#1E1E1E]">Employee Attendance Table</p>
+        <p className="text-xl md:text-2xl font-semibold text-[#1E1E1E]">
+          Employee Attendance Table
+        </p>
 
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full md:w-auto">
           <div className="relative w-full sm:w-[260px]">
@@ -54,9 +80,10 @@ export function EmployeeManagementTable() {
             />
           </div>
 
-          <AddEmployeeButton/>
+          <AddEmployeeButton />
         </div>
       </div>
+
       <div className="w-full overflow-x-auto bg-white rounded-xl p-2 sm:p-4">
         <table className="min-w-[800px] w-full text-left">
           <thead className="bg-[#f0f4ff] text-[#333] text-sm font-semibold">
@@ -93,6 +120,7 @@ export function EmployeeManagementTable() {
           </tbody>
         </table>
       </div>
+
       <div className="flex justify-center mt-4 gap-1 sm:gap-2 flex-wrap items-center text-sm">
         <button
           className="px-2 py-1 text-[#465DFE] disabled:text-gray-400"
@@ -122,6 +150,7 @@ export function EmployeeManagementTable() {
           Next &gt;
         </button>
       </div>
+
       <Dialog open={!!viewEmployee} onOpenChange={() => setViewEmployee(null)}>
         <DialogContent className="bg-white">
           <DialogHeader>
@@ -138,6 +167,7 @@ export function EmployeeManagementTable() {
           )}
         </DialogContent>
       </Dialog>
+
       <EditEmployeeDialog editEmployee={editEmployee} setEditEmployee={setEditEmployee} />
     </div>
   );
